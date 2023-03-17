@@ -17,6 +17,10 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: user-service    #register user-service's forwarding
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
         - id: first-service   # routing id
 #          uri: http://localhost:8081/  # 2. output path
           uri: lb://MY-FIRST-SERVICE    # output path registered eureka server
