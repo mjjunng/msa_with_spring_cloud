@@ -20,11 +20,40 @@ spring:
         - id: user-service    #register user-service's forwarding
           uri: lb://USER-SERVICE
           predicates:
+            - Path=/user-service/login
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}  # remove prefix path -> rewrite path
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
             - Path=/user-service/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+
         - id: catalog-service    #register catalog-service's forwarding
           uri: lb://CATALOG-SERVICE
           predicates:
             - Path=/catalog-service/**
+        - id: order-service    #register order-service's forwarding
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order-service/**
+
         - id: first-service   # routing id
 #          uri: http://localhost:8081/  # 2. output path
           uri: lb://MY-FIRST-SERVICE    # output path registered eureka server
@@ -51,4 +80,5 @@ spring:
             preLogger: true
             postLogger: true
 
-
+token:
+  secret: user_token

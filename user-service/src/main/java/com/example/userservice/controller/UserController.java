@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-service")    // prefix path
+@RequestMapping("/")    // prefix path
 public class UserController {
     private Environment env;
     private UserService userService;
