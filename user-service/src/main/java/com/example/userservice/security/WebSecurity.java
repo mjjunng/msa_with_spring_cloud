@@ -35,6 +35,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
 //        http.authorizeRequests().antMatchers("/users/**").permitAll();  // 인증작업없이 쓸 수 있는 범위
+        http.authorizeRequests().antMatchers("/actuator/**").permitAll();   // actuator는 인증필터 거치지 않음
         http.authorizeRequests().antMatchers("/**")
                         .hasIpAddress("127.0.0.1")
         .and().addFilter(getAuthenticationFilter());    // when request go filter

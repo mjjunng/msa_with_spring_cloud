@@ -33,6 +33,11 @@ logging:
     com.example.userservice: DEBUG
 
 
-token:
-  expiration_time: 86400000  # one-day
-  secret: user_token    # key
+#token:   # -> get from spring cloud config server
+#  expiration_time: 86400000  # one-day
+#  secret: user_token    # key
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
