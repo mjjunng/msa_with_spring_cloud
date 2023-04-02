@@ -36,8 +36,7 @@ greeting:
 
 logging:
   level:
-    com.example.userservice: DEBUG
-
+    com.example.userservice.client: DEBUG
 
 #token:   # -> get from spring cloud config server
 #  expiration_time: 86400000  # one-day
