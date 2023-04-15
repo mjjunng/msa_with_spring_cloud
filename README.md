@@ -7,3 +7,4 @@
 * Spring Cloud Gateway
 * JPA
 * H2 Database
+* Kafka
