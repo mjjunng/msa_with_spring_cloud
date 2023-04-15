@@ -41,7 +41,9 @@ public class OrderController {
 
         OrderDto orderDto = mapper.map(order, OrderDto.class);
         orderDto.setUserId(userId);
-        ResponseOrder responseOrder = mapper.map(orderDto, ResponseOrder.class);
+
+        OrderDto createdOrder = orderService.createOrder(orderDto);
+        ResponseOrder responseOrder = mapper.map(createdOrder, ResponseOrder.class);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseOrder);
 
