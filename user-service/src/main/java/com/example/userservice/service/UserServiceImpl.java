@@ -13,6 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
@@ -37,14 +39,18 @@ public class UserServiceImpl implements UserService{
     RestTemplate restTemplate;
     OrderServiceClient orderServiceClient;
 
+    CircuitBreakerFactory circuitBreakerFactory;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, Environment env,
-                           RestTemplate restTemplate, OrderServiceClient orderServiceClient) {
+                           RestTemplate restTemplate, OrderServiceClient orderServiceClient,
+                           CircuitBreakerFactory circuitBreakerFactory) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.env = env;
         this.restTemplate = restTemplate;
         this.orderServiceClient = orderServiceClient;
+        this.circuitBreakerFactory = circuitBreakerFactory;;
 
     }
 
@@ -90,7 +96,14 @@ public class UserServiceImpl implements UserService{
 //        }
 
         /* ErrorDecoder */
-        List<ResponseOrder> orders = orderServiceClient.getOrder(userId);
+//        List<ResponseOrder> orders = orderServiceClient.getOrder(userId);
+
+
+        /* when use other micro-service(order-service) use circuit breaker */
+        CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
+        List<ResponseOrder> orders = circuitbreaker.run(() -> orderServiceClient.getOrder(userId),
+                throwable -> new ArrayList<>());
+
         userDto.setOrders(orders);
 
         return userDto;
