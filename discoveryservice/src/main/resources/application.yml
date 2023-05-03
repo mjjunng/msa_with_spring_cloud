@@ -5,6 +5,11 @@ spring:
   application:
     name: discoveryservice  # server의 이름 등록
 
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888
+      name: ecommerce
+
 eureka:
   client:
     register-with-eureka: false #eureka server에 등록하고 검색할지

@@ -12,8 +12,10 @@ spring:
   cloud:
     config:
       server:
+        native:
+          search-locations: file://C:\work\springcloud\git-local-repo
         git:
-          uri: file:\\\C:\work\springcloud\git-local-repo
+          uri: https://github.com/mjjunng/spring-cloud-config
 management:
   endpoints:
     web:
